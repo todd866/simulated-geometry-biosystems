@@ -219,51 +219,39 @@ def figure3_dormancy_spectrum():
     X-axis: Geometric complexity (dimensionality)
     Y-axis: Dormancy viability
     """
-    fig, ax = plt.subplots(figsize=(9, 5))
+    fig, ax = plt.subplots(figsize=(11, 5.5))
 
-    # Data points (conceptual)
+    # Trend line FIRST (so it's behind everything)
+    x_trend = np.linspace(0.5, 15.5, 100)
+    y_trend = 0.98 / (1 + 0.08 * x_trend**1.8)
+    ax.plot(x_trend, y_trend, 'k--', alpha=0.3, linewidth=2, zorder=1)
+
+    # Data points with labels ABOVE the curve (positive y offset from point)
+    # (name, x, y, color)
     organisms = [
-        ('Germ cells', 1.5, 0.95, 'purple'),
-        ('Bacterial\nspores', 2, 0.9, 'olive'),
-        ('Seeds', 3, 0.85, 'saddlebrown'),
-        ('Tardigrades', 4.5, 0.75, 'teal'),
-        ('C. elegans', 6, 0.5, 'coral'),
-        ('Fish\nembryos', 8, 0.3, 'steelblue'),
-        ('Mammalian\ncells', 10, 0.15, 'crimson'),
-        ('Whole\nmammals', 14, 0.02, 'darkred'),
+        ('Germ cells', 1.2, 0.90, 'purple'),
+        ('Spores', 3.0, 0.72, 'olive'),
+        ('Seeds', 5.0, 0.52, 'saddlebrown'),
+        ('Tardigrades', 7.0, 0.34, 'teal'),
+        ('C. elegans', 9.0, 0.20, 'coral'),
+        ('Fish embryos', 11.0, 0.10, 'steelblue'),
+        ('Mammalian cells', 13.0, 0.05, 'crimson'),
+        ('Whole mammals', 15.0, 0.02, 'darkred'),
     ]
 
-    for name, complexity, viability, color in organisms:
-        ax.scatter(complexity, viability, s=200, c=color, edgecolors='black',
-                   linewidths=1.5, zorder=3)
-        # Offset labels to avoid overlap
-        offset_y = 0.08 if viability < 0.5 else -0.08
-        va = 'bottom' if viability < 0.5 else 'top'
-        ax.text(complexity, viability + offset_y, name, ha='center', va=va,
-                fontsize=9, fontweight='bold')
+    # Plot points and labels
+    for name, x, y, color in organisms:
+        ax.scatter(x, y, s=120, c=color, edgecolors='black', linewidths=1.5, zorder=3)
+        # All labels above the point
+        ax.text(x, y + 0.10, name, ha='center', va='bottom', fontsize=8,
+                fontweight='bold', color=color)
 
-    # Trend line
-    x_trend = np.linspace(1, 15, 100)
-    y_trend = 1 / (1 + 0.15 * x_trend**1.5)
-    ax.plot(x_trend, y_trend, 'k--', alpha=0.4, linewidth=2)
-
-    # Annotations
-    ax.annotate('High information,\nlow geometry\n→ freezable',
-                xy=(1.5, 0.95), xytext=(4, 0.98),
-                fontsize=9, ha='left',
-                arrowprops=dict(arrowstyle='->', color='purple', lw=1.5))
-
-    ax.annotate('High geometry\n→ not freezable',
-                xy=(14, 0.02), xytext=(11, 0.25),
-                fontsize=9, ha='right',
-                arrowprops=dict(arrowstyle='->', color='darkred', lw=1.5))
-
-    ax.set_xlabel('Geometric Complexity (dimensionality of constraint architecture)', fontsize=11)
-    ax.set_ylabel('Dormancy Viability (probability of revival)', fontsize=11)
+    ax.set_xlabel('Geometric Complexity', fontsize=11)
+    ax.set_ylabel('Dormancy Viability', fontsize=11)
     ax.set_xlim(0, 16)
-    ax.set_ylim(0, 1.05)
+    ax.set_ylim(-0.05, 1.10)
     ax.set_title('Dormancy Difficulty Scales with Dimensionality', fontsize=13, fontweight='bold')
-    ax.grid(True, alpha=0.3)
+    ax.grid(True, alpha=0.2, zorder=0)
 
     plt.tight_layout()
     plt.savefig('../figures/figure3_dormancy.pdf', bbox_inches='tight', dpi=300)
