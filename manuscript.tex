@@ -113,7 +113,14 @@ A living cell occupies a constrained region of state space. Its molecular concen
 
 This instantiated geometry has a measurable signature: \emph{cross-scale coherence}. The molecular dynamics constrain cellular behavior. Cellular behavior constrains tissue organization. Tissue organization constrains organ function. And crucially, the causal arrows run both ways: higher scales actively regulate lower scales. This bidirectional coupling creates a unified geometric structure spanning multiple scales.
 
-We call this \textbf{vertical coupling}: downward regulation (coarse variables constrain fine dynamics) and upward closure (fine dynamics stabilize coarse variables), forming feedback across scales. Current AI systems are \emph{vertically flat}: they may have many layers, but higher representations do not actively maintain lower-level dynamics.
+We call this \textbf{vertical coupling}: downward regulation (coarse variables constrain fine dynamics) and upward closure (fine dynamics stabilize coarse variables), forming feedback across scales (Figure~\ref{fig:distinction}). Current AI systems are \emph{vertically flat}: they may have many layers, but higher representations do not actively maintain lower-level dynamics.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/figure1_distinction.pdf}
+    \caption{\textbf{The information/geometry distinction.} Left: Information is substrate-independent and can be copied without loss (bits, facts, patterns). Right: Geometry is substrate-dependent and must be instantiated through active maintenance---coupled oscillations, cross-scale feedback, constraint closure. A database has information; a living cell has geometry.}
+    \label{fig:distinction}
+\end{figure}
 
 %==============================================================================
 \section{Measuring Geometry}
@@ -222,9 +229,16 @@ This is precisely what distinguishes viable dormancy from death. In death, the g
 
 This reveals a deeper distinction: geometry can be stored \emph{physically} but not \emph{symbolically}. A frozen tardigrade is not ``remembering'' its geometry---the geometry is still there, materially preserved. A paused LLM preserves structure only symbolically, as patterns in memory. Dormancy shows that biological geometry persists as physical constraint architecture, not as information \emph{about} constraints.
 
-Crucially, more complex organisms are harder to put into viable dormancy. Mammals cannot be frozen and revived like tardigrades. This makes sense in the geometric framework: higher-dimensional systems have more degrees of freedom whose geometric relationships must be preserved. Dormancy difficulty scales with dimensionality.
+Crucially, more complex organisms are harder to put into viable dormancy. Mammals cannot be frozen and revived like tardigrades. This makes sense in the geometric framework: higher-dimensional systems have more degrees of freedom whose geometric relationships must be preserved. Dormancy difficulty scales with dimensionality (Figure~\ref{fig:dormancy}).
 
 The exception proves the rule: the one mammalian cell type that \emph{can} be reliably cryopreserved is the germ cell. Sperm and oocytes carry maximal genomic information but minimal active geometry---they are information carriers awaiting instantiation, not self-maintaining constraint architectures. Germ cells did not evolve \emph{to be frozen}, but they did evolve for long-term information preservation with high fidelity: quiescent, low-dimensional, optimized for reliable transmission rather than autonomous function. Their low dimensionality makes them freezable; their high information content makes them reproductively potent. This is the information/geometry distinction in cellular form.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/figure3_dormancy.pdf}
+    \caption{\textbf{Dormancy difficulty scales with dimensionality.} Probability of viable revival after cryopreservation decreases with geometric complexity. Germ cells (high information, low geometry) are readily freezable. Whole mammals (high geometry) cannot be frozen and revived. The trend reflects the increasing difficulty of preserving constraint architecture as dimensionality increases.}
+    \label{fig:dormancy}
+\end{figure}
 
 \subsection{Death as Geometric Collapse}
 
@@ -367,7 +381,7 @@ Current AI systems should show systematic estimator mismatch: high $D_{\text{geo
 
 \textbf{Operationalizing for AI.} For neural networks, define $D_{\text{geom}}$ on \emph{activation manifolds}: the effective rank or participation ratio of layerwise activations under a distribution of prompts. This measures how many dimensions the network actually uses, not how many parameters it has. Define $R_{\text{spec}}$ on \emph{temporal activation dynamics} in recurrent or agent settings, or on token-step variability spectra for feedforward models---noting that the latter is externally clocked and thus expected to show impoverished spectral structure.
 
-This could be tested by measuring both geometric and spectral complexity in trained neural networks. Geometric measures (intrinsic dimension of representations, effective rank of activation matrices) should be moderate to high. Spectral measures (oscillatory structure in activation dynamics) should be low or trivial, yielding elevated $\varepsilon$.
+This could be tested by measuring both geometric and spectral complexity in trained neural networks. Geometric measures (intrinsic dimension of representations, effective rank of activation matrices) should be moderate to high. Spectral measures (oscillatory structure in activation dynamics) should be low or trivial, yielding elevated $\varepsilon$ (Figure~\ref{fig:phase_space}).
 
 \subsection{Prediction 2: Estimator Agreement in Biology}
 
@@ -386,6 +400,13 @@ A minimal viable experiment: use public HRV datasets with mortality outcomes. Co
 The framework predicts a temporal ordering: first $\varepsilon$ increases (estimators diverge), then both measures collapse (death).
 
 This could be tested in longitudinal clinical data. The prediction is that rising $\varepsilon$ should precede terminal decline, providing early warning of geometric destabilization.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/figure2_phase_space.pdf}
+    \caption{\textbf{Match error phase space.} Geometric complexity ($D_{\text{geom}}$) versus spectral richness ($R_{\text{spec}}$) for different system states. Healthy biological systems cluster near the diagonal (low $\varepsilon$, matched estimators). Pathological states show elevated mismatch. Death/collapse occupies the low-low corner. AI simulations occupy a distinct region: high geometric complexity (rich representations) but low spectral richness (no intrinsic oscillations), yielding systematic mismatch.}
+    \label{fig:phase_space}
+\end{figure}
 
 %==============================================================================
 \section{Discussion}
