@@ -40,7 +40,7 @@ Large language models pass examinations and solve complex problems, yet somethin
 
 Current AI has vast information but minimal self-maintained geometry. Large language models simulate geometry using statistical patterns that approximate relational structure, but do not instantiate it: there is no underlying manifold whose dynamics are being maintained.
 
-We formalize this distinction using results from dynamical systems theory. In systems with genuine geometry, independent complexity estimators---geometric (state-space occupancy) and spectral (oscillatory richness)---agree. We define \emph{match error} $\varepsilon$ measuring this agreement, predicting that living systems minimize $\varepsilon$ while artificial systems show systematic mismatch.
+We formalize this distinction using results from dynamical systems theory. In systems with genuine geometry, independent complexity estimators---geometric (state-space occupancy) and spectral (oscillatory richness)---agree. We define \emph{match error} $\varepsilon$ measuring this agreement, predicting that living systems \emph{robustly} minimize $\varepsilon$ across measurement windows and modalities, while artificial systems show systematic mismatch.
 
 Biology serves as existence proof: life instantiates geometry through bidirectional cross-scale coupling. Dormancy proves geometry can exist without dynamics---structure persists when oscillations pause. Death is geometric collapse.
 
@@ -98,10 +98,10 @@ The geometry of a system is revealed not by counting its degrees of freedom, but
 The crucial difference:
 \begin{itemize}
     \item \textbf{Information} is what can be copied without loss. It is substrate-independent.
-    \item \textbf{Geometry} is what cannot be copied---only instantiated. It is substrate-dependent.
+    \item \textbf{Geometry} cannot be copied as information alone; it must be re-instantiated as a maintained constraint architecture. It is substrate-dependent.
 \end{itemize}
 
-You can copy a cell's genome (information). You cannot copy the cell's dynamical coherence (geometry). You would have to \emph{rebuild} it---construct a new substrate that instantiates the same geometric constraints through active maintenance.
+You can copy a cell's genome (information). You cannot copy the cell's dynamical coherence (geometry) by copying data alone---you would have to \emph{rebuild} it, constructing a substrate capable of realizing and maintaining the same constraint architecture. Information can specify geometry, but only machines can instantiate it.
 
 This is why the name of a thing is information, but what the thing \emph{is}---how it functions, persists, responds---is geometry. The name ``heart'' is information. The actual heart is a geometric structure: a manifold of possible states, actively maintained against entropy, defended against perturbation.
 
@@ -218,7 +218,7 @@ Rosen \citep{rosen1991} formalized this as ``closure to efficient causation'': l
 
 Dormant states provide crucial evidence that geometry is distinct from dynamics.
 
-Tardigrades in cryptobiosis, bacterial spores, frozen embryos, and seeds are not thermodynamically active \citep{keilin1959, crowe2002}. No metabolism, no energy flow, no entropy export. By Schr\"{o}dinger's criterion or Prigogine's dissipative structures, they should be dead.
+Tardigrades in cryptobiosis, bacterial spores, frozen embryos, and seeds exhibit effectively negligible metabolism \citep{keilin1959, crowe2002}---drastically reduced energy flow and entropy export on biological timescales. By Schr\"{o}dinger's criterion or Prigogine's dissipative structures, they should be dead.
 
 Yet they resume full function upon reactivation. What persists in dormancy is not dynamics but \emph{structure}: geometric relationships, constraint architecture, the shape of the attractor.
 
@@ -346,18 +346,20 @@ Before detailing predictions, we specify how $\varepsilon$ could be computed fro
 
     \item \textbf{Geometric proxy ($D_{\text{geom}}$).} Delay-embed each window using Takens' method (embedding dimension $m \geq 2D + 1$ where $D$ is expected attractor dimension; delay $\tau$ from first minimum of mutual information). Compute participation ratio: $\text{PR} = (\sum_i \lambda_i)^2 / \sum_i \lambda_i^2$ from eigenvalues of the embedded covariance matrix.
 
-    \item \textbf{Spectral proxy ($D_{\text{spec}}$).} Compute power spectral density via Welch's method. Normalize to probability distribution and compute spectral entropy: $H_S = -\sum_f p(f) \log p(f)$. Convert to effective spectral dimension by exponentiating: $D_{\text{spec}} = e^{H_S}$.
+    \item \textbf{Spectral proxy ($R_{\text{spec}}$).} Compute power spectral density via Welch's method. Normalize to probability distribution and compute spectral entropy: $H_S = -\sum_f p(f) \log p(f)$. Convert to spectral richness by exponentiating: $R_{\text{spec}} = e^{H_S}$. This yields the effective number of frequencies contributing to the signal---a measure of spectral complexity comparable in spirit (though not in raw units) to the geometric participation ratio.
 
-    \item \textbf{Match error.} Compute $\varepsilon = |D_{\text{geom}} - D_{\text{spec}}| / ((D_{\text{geom}} + D_{\text{spec}})/2 + \delta)$ for each window. Report median and interquartile range across windows.
+    \item \textbf{Match error.} Compute $\varepsilon = |D_{\text{geom}} - R_{\text{spec}}| / ((D_{\text{geom}} + R_{\text{spec}})/2 + \delta)$ for each window, after normalizing both proxies to comparable scales (e.g., relative to their respective system capacities). Report median and interquartile range across windows.
 \end{enumerate}
 
 This pipeline requires only standard signal processing libraries (e.g., SciPy, MATLAB Signal Processing Toolbox) and produces a single scalar $\varepsilon$ interpretable as degree of estimator agreement.
 
 \subsection{Prediction 1: Estimator Mismatch in AI}
 
-Current AI systems should show systematic estimator mismatch: high $D_{\text{geom}}$ (parameter complexity, representation richness) but low $D_{\text{spec}}$ (no intrinsic oscillations, externally clocked dynamics).
+Current AI systems should show systematic estimator mismatch: high $D_{\text{geom}}$ (representation richness) but low $R_{\text{spec}}$ (no intrinsic oscillations, externally clocked dynamics).
 
-This could be tested by measuring both geometric and spectral complexity in trained neural networks. Geometric measures (intrinsic dimension of representations, effective rank of weight matrices) should be high. Spectral measures (oscillatory structure in activation dynamics) should be low or trivial.
+\textbf{Operationalizing for AI.} For neural networks, define $D_{\text{geom}}$ on \emph{activation manifolds}: the effective rank or participation ratio of layerwise activations under a distribution of prompts. This measures how many dimensions the network actually uses, not how many parameters it has. Define $R_{\text{spec}}$ on \emph{temporal activation dynamics} in recurrent or agent settings, or on token-step variability spectra for feedforward models---noting that the latter is externally clocked and thus expected to show impoverished spectral structure.
+
+This could be tested by measuring both geometric and spectral complexity in trained neural networks. Geometric measures (intrinsic dimension of representations, effective rank of activation matrices) should be moderate to high. Spectral measures (oscillatory structure in activation dynamics) should be low or trivial, yielding elevated $\varepsilon$.
 
 \subsection{Prediction 2: Estimator Agreement in Biology}
 

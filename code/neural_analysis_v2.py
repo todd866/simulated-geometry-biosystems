@@ -109,31 +109,42 @@ def compute_geometric_complexity(eeg: np.ndarray) -> float:
 
 def compute_spectral_complexity(eeg: np.ndarray, fs: float = 256.0) -> float:
     """
-    Spectral complexity via entropy of power spectrum.
+    Spectral complexity via exponential of spectral entropy (perplexity).
 
-    Spectral entropy measures the flatness of the power spectrum, which is
-    directly related to the decay rate of Fourier coefficients (D_F).
+    Matches manuscript definition: R_spec = exp(H_S)
 
-    High spectral entropy = power distributed across frequencies = rich harmonics
-    Low spectral entropy = power concentrated in few frequencies = collapsed
+    This yields the effective number of frequencies contributing to the signal.
+    The perplexity ranges from 1 (single frequency) to N_freq_bins (uniform).
 
-    Note: The scaling factor (* 10) is for visual comparability with PR.
-    Empirical use requires calibration to a baseline healthy state.
+    SCALING: To compare with Participation Ratio (which ranges 1 to N_channels),
+    we normalize by the ratio of spatial to spectral capacity:
+        R_spec_scaled = perplexity * (N_channels / N_freq_bins)
+
+    This maps "full spectral complexity" to "full spatial complexity",
+    making the two proxies comparable for match error calculation.
     """
     freqs, psd = signal.welch(eeg, fs=fs, nperseg=512)
     psd_avg = np.mean(psd, axis=0)
 
-    # Normalize to distribution
+    # Normalize to probability distribution
     psd_norm = psd_avg / np.sum(psd_avg)
     psd_norm = psd_norm[psd_norm > 1e-10]
 
-    # Spectral entropy
+    # Spectral entropy (in nats)
     se = entropy(psd_norm)
-    # Normalize by max entropy
-    se_norm = se / np.log(len(psd_norm))
 
-    # Scale to comparable range with PR
-    return se_norm * 10
+    # Perplexity: effective number of frequencies
+    # Range: 1.0 to len(psd_norm) (approx 257 for nperseg=512)
+    perplexity = np.exp(se)
+
+    # Scale to match spatial capacity (N_channels)
+    # This calibrates spectral richness to geometric participation ratio
+    n_freq_bins = len(psd_norm)
+    n_channels = eeg.shape[0]
+
+    R_spec_scaled = perplexity * (n_channels / n_freq_bins)
+
+    return R_spec_scaled
 
 
 def compute_match_quality(D_geom: float, D_spec: float) -> float:
